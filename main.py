@@ -23,22 +23,21 @@ name = arguments['<name>']
 value = arguments['<value>']
 config = configparser.ConfigParser()
 
-if arguments['get']:
+if os.path.exists(beforesubmit):
+    config.read(beforesubmit)
+else:
     config.read(file_path)
+
+if arguments['get']:
     print(config[path][name])
 
 elif arguments['set']:
-    if os.path.exists(beforesubmit):
-        config.read(beforesubmit)
-    else:
-        config.read(file_path)
     config[path][name] = value
     with open(beforesubmit, 'w') as configfile:
         config.write(configfile)
 
 elif arguments['submit']:
     if os.path.exists(beforesubmit):
-        config.read(beforesubmit)
         os.system('cat %s > %s; rm %s;' %
                   (beforesubmit, file_path, beforesubmit))
         #shutil.move(beforesubmit, file_path)
